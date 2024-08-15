@@ -1,39 +1,39 @@
 /** @jest-environment jsdom */
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
+
 import App from "./App";
+import ToDo from "./components/ToDo";
 
-test("Clicking number buttons outputs correct values", () => {
+test("App: To-Do titles should be displayed", () => {
   render(<App />);
-  // simulate clicking numbers
-  fireEvent.click(screen.getByText("1"));
-  fireEvent.click(screen.getByText("2"));
 
-  // expect the numbers to be output
-  expect(screen.getByText("12")).toBeTruthy();
+  // expect the Unicorn to show
+  expect(screen.getByText("Buy Bananas")).toBeTruthy();
+  expect(screen.getByText("Walk Dog")).toBeTruthy();
 });
 
-test("Clicking + button allows for new number to be input", () => {
-  render(<App />);
-  // simulate clicking numbers
-  fireEvent.click(screen.getByText("1"));
-  fireEvent.click(screen.getByText("2"));
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("3"));
-  fireEvent.click(screen.getByText("2"));
-  // expect the second set of numbers to be output
-  expect(screen.getByText("32")).toBeTruthy();
+test("ToDo: ToDo titles should be displayed", () => {
+  render(<ToDo todo={{ title: "Sweep", complete: true }} />);
+
+  const sweepDiv = screen.getByText("Sweep");
+  // expect the Sweep to show
+  expect(sweepDiv).toBeTruthy();
+
+  expect(sweepDiv.classList.contains("complete")).toEqual(true);
 });
 
-test("= button outputs correct sum", () => {
+test("Submit handler adds todos to the list", () => {
   render(<App />);
-  // simulate clicking numbers and operators
-  fireEvent.click(screen.getByText("1"));
-  fireEvent.click(screen.getByText("2"));
-  fireEvent.click(screen.getByText("+"));
-  fireEvent.click(screen.getByText("3"));
-  fireEvent.click(screen.getByText("2"));
-  fireEvent.click(screen.getByText("="));
-  // expect sum to be output
-  expect(screen.getByText("44")).toBeTruthy();
+  const input = screen.getByLabelText("title");
+  const checkbox = screen.getByLabelText("complete");
+  const form = screen.getByLabelText("form");
+
+  const userTyped = "Make Bed";
+  fireEvent.change(input, { target: { value: userTyped } });
+  fireEvent.submit(form);
+
+  // expect the title to show
+  const todosList = document.getElementById("todos");
+  expect(within(todosList).getByText(userTyped)).toBeTruthy();
 });

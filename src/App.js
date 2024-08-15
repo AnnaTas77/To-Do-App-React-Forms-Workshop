@@ -1,77 +1,48 @@
-import React from "react";
-import Button from "./components/Button";
-import Screen from "./components/Screen";
-import { useState } from "react";
+import React, { useState } from "react";
+
+// import ToDo
 
 function App() {
-  const btnValues = [
-    "C",
-    "+-",
-    "%",
-    "/",
-    7,
-    8,
-    9,
-    "X",
-    4,
-    5,
-    6,
-    "-",
-    1,
-    2,
-    3,
-    "+",
-    0,
-    ".",
-    "=",
+  const originalToDos = [
+    {
+      title: "Buy Bananas",
+      complete: true,
+    },
+    {
+      title: "Walk Dog",
+      complete: false,
+    },
   ];
-  // Define state and click handlers here
+  // Initialize state here
 
-  const [calc, setCalc] = useState({ sign: "", num: 0, res: 0 });
+  const [todos, setTodos] = useState(originalToDos);
 
-  const numClickHandler = (e) => {
-    e.preventDefault();
-
-    let typedValue = e.target.value;
-
-    setCalc((prevCalc) => {
-      const newNum = (() => {
-        if (prevCalc.num === "0" && typedValue === "0") {
-          return "0";
-        } else if (prevCalc.num === "0") {
-          return typedValue;
-        } else {
-          return prevCalc.num + typedValue;
-        }
-      })();
-
-      const newRes = prevCalc.sign ? prevCalc.sign : "0";
-
-      return {
-        ...prevCalc,
-        num: newNum,
-        res: newRes,
-      };
-    });
-  };
+  // Write handleSubmit
 
   return (
     <>
-      <div className="wrapper">
-        <Screen value={calc.num} />
-        <div className="buttonBox">
-          {btnValues.map((btn) => (
-            <Button
-              value={btn}
-              className={btn === "=" ? "equals" : ""}
-              onClick={numClickHandler}
-            />
-          ))}
+      <section id="controls">
+        <div className="step">
+          <h1>To-Do App</h1>
         </div>
-        ;
-      </div>
+        {/* attach handleSubmit to onSubmit prop */}
+        <form className="step" aria-label="form">
+          <h4>Add a To-Do!</h4>
+          {/* attach onChange handler */}
+          <input type="text" placeholder="todo title" aria-label="title" />
+          <label>
+            {/* attach onChange handler */}
+            <input type="checkbox" title="checkbox" aria-label="complete" />
+            <small> Complete</small>
+          </label>
+          <button type="submit">Add ToDo</button>
+        </form>
+      </section>
+      <section className="step" id="todos">
+        {/* map over todos, rendering ToDo component, passing in todo prop */}
+      </section>
     </>
   );
 }
 
-export default App;
+module.exports = App;
